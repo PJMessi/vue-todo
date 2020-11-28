@@ -67,9 +67,11 @@ const mutations = {
   },
 
   addTodo(state, todo) {
-    let todoData = state.todos.data
-    todoData.unshift(todo)
-    Vue.set(state.todos, 'data', todoData)
+    if (state.filters.status == 'pending' || state.filters.status == '') {
+      let todoData = state.todos.data
+      todoData.unshift(todo)
+      Vue.set(state.todos, 'data', todoData)
+    }
   },
 
   updateFilter(state, filterData) {

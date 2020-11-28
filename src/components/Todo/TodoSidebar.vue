@@ -71,16 +71,16 @@
 
     <div class="todo-menu">
       <ul class="list-unstyled">
-        <li class="active">
+        <li :class="{'active': todosFilter.status == ''}">
           <a href="#" @click.prevent="updateTodoFilters({status: ''})"><i class="fas fa-bars"></i>All</a>
         </li>
-        <li>
+        <li :class="{'active': todosFilter.status == 'pending'}">
           <a href="#" @click.prevent="updateTodoFilters({status: 'pending'})"><i class="fas fa-trash"></i>Pending</a>
         </li>
-        <li>
+        <li :class="{'active': todosFilter.status == 'inprogress'}">
           <a href="#" @click.prevent="updateTodoFilters({status: 'inprogress'})"><i class="fas fa-trash"></i>In Progress</a>
         </li>
-        <li>
+        <li :class="{'active': todosFilter.status == 'finished'}">
           <a href="#" @click.prevent="updateTodoFilters({status: 'finished'})"><i class="fas fa-check"></i>Completed</a>
         </li>
       </ul>
@@ -92,6 +92,7 @@
       <form>
         <div class="input-group">
           <input
+            v-on:input="debounceInput"
             type="text"
             id="todo-search"
             class="form-control"
@@ -105,6 +106,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import _ from 'lodash';
 export default {
   name: "TodoSidebar",
 
@@ -114,7 +116,9 @@ export default {
         name: '',
         status: 'pending',
         description: ''
-      }
+      },
+
+      searchTerm: ''
     }
   },
 
@@ -124,6 +128,10 @@ export default {
         this.fetchTodos()
       },
       deep: true
+    },
+
+    searchTerm: function(newValue) {
+      this.updateTodoFilters({q: newValue})
     }
   },
 
@@ -132,7 +140,13 @@ export default {
   },
 
   methods: {
-    ...mapActions(['createTodo', 'updateTodoFilters', 'fetchTodos'])
+    ...mapActions(['createTodo', 'updateTodoFilters', 'fetchTodos']),
+
+    
+    debounceInput: _.debounce(function (e) {
+      this.searchTerm = e.target.value
+    }, 500)
+    
   }
 };
 </script>
