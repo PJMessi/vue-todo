@@ -61,11 +61,55 @@ import Sidebar from "../components/Sidebar";
 import TodoSidebar from "../components/Todo/TodoSidebar";
 import TodoList from "../components/Todo/TodoList"
 import TopNavivation from "../components/TopNavigation"
+import { mapGetters } from "vuex";
 
 export default {
   name: "TodoApp",
 
   components: { Sidebar, TodoSidebar, TodoList, TopNavivation },
+
+  computed: {
+    ...mapGetters(["authUser", "isLoggedIn", "authToken"])
+  },
+
+  watch: {
+    /**
+     * If user is logged out, redirect users to the login page.
+     */
+    isLoggedIn: function(newValue) {
+      if (newValue != true) {
+        this.$router.push('/login')
+      }
+    }
+  },
+
+  methods: {
+    /**
+     * Intercepts the 401 request of the axios and then clears tokens.
+     * We should put this in App.vue. For for this app, Chat.vue acts like App.vue, so we are putting here.
+     */
+    interceptAxios401: function () {
+      let store = this.$store;
+      // let router = this.$router;
+      
+
+      this.$axios.interceptors.response.use(
+        function (response) {
+          return response;
+        },
+        function (error) {
+          if (401 === error.response.status) {
+            store.dispatch("reset");          
+            // router.push("/login");            
+            return Promise.reject(error);
+            
+          } else {
+            return Promise.reject(error);
+          }
+        }
+      );
+    },
+  }
   
 };
 </script>

@@ -23,6 +23,12 @@
             ><i class="material-icons-outlined">account_circle</i>Profile</a
           >
         </li>
+
+        <li>
+          <a href="#" @click.prevent="confirmLogout()"
+            ><i class="material-icons-outlined">account_circle</i>Log out</a
+          >
+        </li>
         
       </ul>
     </div>
@@ -30,7 +36,32 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 export default {
   name: "Sidebar",
+
+  methods: {
+    ...mapActions(['logout']),
+
+    /** 
+     * Shows confirm dialog for logout, and calls logout function if user checks yes.
+     */
+    confirmLogout: async function() {
+
+      let result = await this.$Swal.fire({
+        title: 'Are you sure?',
+        showCancelButton: true,
+        cancelButtonColor: '#3085d6',
+        confirmButtonColor: '#d33',
+        confirmButtonText: 'Yes'
+      })
+
+      if (result.isConfirmed) {
+        await this.logout()
+      }
+    
+    },
+
+  }
 };
 </script>
