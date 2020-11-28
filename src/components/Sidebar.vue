@@ -11,57 +11,51 @@
     <div class="page-sidebar-inner slimscroll">
       <ul class="accordion-menu">
         <li class="sidebar-title">Apps</li>
-        
-        <li>
-          <a href="index.html" class="active"
-            ><i class="material-icons-outlined">dashboard</i>Dashboard</a
-          >
-        </li>
-        
-        <li>
-          <a href="profile.html"
-            ><i class="material-icons-outlined">account_circle</i>Profile</a
+
+        <li :class="{'active-page': getRouteName() == 'TodoApp'}">
+          <router-link to="/" active-class="active"
+            ><i class="material-icons-outlined">dashboard</i>Dashboard</router-link
           >
         </li>
 
         <li>
           <a href="#" @click.prevent="confirmLogout()"
-            ><i class="material-icons-outlined">account_circle</i>Log out</a
+            ><i class="material-icons-outlined">power_settings_new</i>Log out</a
           >
         </li>
-        
       </ul>
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions } from 'vuex';
 export default {
-  name: "Sidebar",
+  name: 'Sidebar',
 
   methods: {
     ...mapActions(['logout']),
 
-    /** 
+    /**
      * Shows confirm dialog for logout, and calls logout function if user checks yes.
      */
     confirmLogout: async function() {
-
       let result = await this.$Swal.fire({
         title: 'Are you sure?',
         showCancelButton: true,
         cancelButtonColor: '#3085d6',
         confirmButtonColor: '#d33',
-        confirmButtonText: 'Yes'
-      })
+        confirmButtonText: 'Yes',
+      });
 
       if (result.isConfirmed) {
-        await this.logout()
+        await this.logout();
       }
-    
     },
 
-  }
+    getRouteName: function() {
+      return this.$route.name
+    }
+  },
 };
 </script>
