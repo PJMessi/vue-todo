@@ -31,14 +31,27 @@
             </div>
             <div class="modal-body">
               <form>
+
                 <div class="form-group">
                   <input
+                    v-model="todo.name"
                     type="text"
                     class="form-control"
                     id="new-task-name"
                     placeholder="Task Name"
                   />
                 </div>
+
+                <div class="form-group">
+                  <input
+                    v-model="todo.description"
+                    type="text"
+                    class="form-control"
+                    id="new-task-description"
+                    placeholder="Task Description"
+                  />
+                </div>
+
               </form>
             </div>
             <div class="modal-footer">
@@ -49,7 +62,7 @@
               >
                 Cancel
               </button>
-              <button type="button" class="btn btn-primary">Add</button>
+              <button type="button" class="btn btn-primary" @click.prevent="createTodo(todo)">Add</button>
             </div>
           </div>
         </div>
@@ -88,7 +101,22 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 export default {
   name: "TodoSidebar",
+
+  data() {
+    return {
+      todo: {
+        name: '',
+        status: 'pending',
+        description: ''
+      }
+    }
+  },
+
+  methods: {
+    ...mapActions(['createTodo'])
+  }
 };
 </script>
