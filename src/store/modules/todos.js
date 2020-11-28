@@ -2,11 +2,19 @@ import axios from 'axios';
 import Vue from 'vue';
 
 const state = {
-  todos: { data:[] }
+  todos: { data:[] },
+  filters: {
+    limit: 15,
+    sort_by: 'id',
+    sort_order: 'desc',
+    q: '',
+    status: ''
+  }
 };
 
 const getters = {
   todos: state => state.todos.data,
+  todosFilter: state => state.filters
 };
 
 const actions = {
@@ -14,7 +22,7 @@ const actions = {
     try {
       url = url ? url : `http://localhost:8000/api/todos`
   
-      const res = await axios.get(url, { params: {limit: state.limit} })
+      const res = await axios.get(url, { params: state.filters })
   
       const todos = res.data.data
   
@@ -40,7 +48,17 @@ const actions = {
     } catch (err) {
       console.log(err)
     }
+  },
+
+  updateTodoFilters: function({commit}, filterData) {
+    try {
+      commit('updateFilter', filterData)
+
+    } catch (err) {
+      console.log(err)
+    }
   }
+
 };
 
 const mutations = {
@@ -53,6 +71,12 @@ const mutations = {
     todoData.unshift(todo)
     Vue.set(state.todos, 'data', todoData)
   },
+
+  updateFilter(state, filterData) {
+    for (const [key, value] of Object.entries(filterData)) {
+      state.filters[key] = value
+    }
+  }
 };
 
 export default {

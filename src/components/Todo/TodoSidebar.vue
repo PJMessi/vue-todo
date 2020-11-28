@@ -72,13 +72,16 @@
     <div class="todo-menu">
       <ul class="list-unstyled">
         <li class="active">
-          <a href="#"><i class="fas fa-bars"></i>All</a>
+          <a href="#" @click.prevent="updateTodoFilters({status: ''})"><i class="fas fa-bars"></i>All</a>
         </li>
         <li>
-          <a href="#"><i class="fas fa-check"></i>Completed</a>
+          <a href="#" @click.prevent="updateTodoFilters({status: 'pending'})"><i class="fas fa-trash"></i>Pending</a>
         </li>
         <li>
-          <a href="#"><i class="fas fa-trash"></i>Deleted</a>
+          <a href="#" @click.prevent="updateTodoFilters({status: 'inprogress'})"><i class="fas fa-trash"></i>In Progress</a>
+        </li>
+        <li>
+          <a href="#" @click.prevent="updateTodoFilters({status: 'finished'})"><i class="fas fa-check"></i>Completed</a>
         </li>
       </ul>
     </div>
@@ -101,7 +104,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 export default {
   name: "TodoSidebar",
 
@@ -115,8 +118,21 @@ export default {
     }
   },
 
+  watch: {
+    todosFilter: {
+      handler: function() {
+        this.fetchTodos()
+      },
+      deep: true
+    }
+  },
+
+  computed: {
+    ...mapGetters(['todosFilter'])
+  },
+
   methods: {
-    ...mapActions(['createTodo'])
+    ...mapActions(['createTodo', 'updateTodoFilters', 'fetchTodos'])
   }
 };
 </script>
