@@ -3,65 +3,19 @@
     <div class="card-body">
       <div class="todo-list">
         <ul class="list-unstyled">
-          <li>
-            <a href="javascript: void(0);" class="custom-checkbox">
-              <input type="checkbox" class="custom-control-input" id="task1" />
-              <label class="custom-control-label" for="task1"></label>
-              Go to shop
+
+          <li v-for="todo in todos" :key="todo.id">
+            <a href="javascript: void(0);" class="custom-checkbox" :class="{'done': todo.status == 'finished'}">
+
+              <input type="checkbox" class="custom-control-input" :id="todo.id" :checked="todo.status == 'finished'" />
+
+              <label class="custom-control-label" :for="todo.id"></label>
+
+              {{todo.name}}
+              
             </a>
           </li>
-          <li>
-            <a href="javascript: void(0);" class="custom-checkbox">
-              <input type="checkbox" class="custom-control-input" id="task2" />
-              <label class="custom-control-label" for="task2"></label>
-              Finish java assignment
-            </a>
-          </li>
-          <li>
-            <a href="javascript: void(0);" class="custom-checkbox">
-              <input type="checkbox" class="custom-control-input" id="task3" />
-              <label class="custom-control-label" for="task3"></label>
-              Send e-mail to Dr. Collins
-            </a>
-          </li>
-          <li>
-            <a href="javascript: void(0);" class="custom-checkbox">
-              <input type="checkbox" class="custom-control-input" id="task4" />
-              <label class="custom-control-label" for="task4"></label>
-              Delete all folders in ../assets/plugins
-            </a>
-          </li>
-          <li>
-            <a href="javascript: void(0);" class="custom-checkbox done">
-              <input
-                type="checkbox"
-                class="custom-control-input"
-                id="task5"
-                checked
-              />
-              <label class="custom-control-label" for="task5"></label>
-              Sell iPad Mini
-            </a>
-          </li>
-          <li>
-            <a href="javascript: void(0);" class="custom-checkbox done">
-              <input
-                type="checkbox"
-                class="custom-control-input"
-                id="task6"
-                checked
-              />
-              <label class="custom-control-label" for="task6"></label>
-              Create new Amazon account
-            </a>
-          </li>
-          <li>
-            <a href="javascript: void(0);" class="custom-checkbox">
-              <input type="checkbox" class="custom-control-input" id="task7" />
-              <label class="custom-control-label" for="task7"></label>
-              Check new codes from section #7 student assignments
-            </a>
-          </li>
+         
         </ul>
       </div>
     </div>
@@ -69,7 +23,20 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex"
 export default {
   name: "TodoList",
+
+  created: function() {
+    this.fetchTodos()
+  },
+
+  computed: {
+    ...mapGetters(['todos'])
+  },
+
+  methods: {
+    ...mapActions(['fetchTodos'])
+  }
 };
 </script>
