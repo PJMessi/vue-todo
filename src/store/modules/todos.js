@@ -50,6 +50,20 @@ const actions = {
     }
   },
 
+  updateTodo: async function({commit}, todo) {
+    try {
+    
+      const res = await axios.put(`http://localhost:8000/api/todos/${todo.id}`, todo )
+
+      const updatedTodo = res.data.data
+
+      commit('updateTodo', updatedTodo)
+
+    } catch (err) {
+      console.log(err)
+    }
+  },
+
   updateTodoFilters: function({commit}, filterData) {
     try {
       commit('updateFilter', filterData)
@@ -66,10 +80,10 @@ const mutations = {
     state.todos = data
   },
 
-  addTodo(state, todo) {
+  addTodo(state, newTodo) {
     if (state.filters.status == 'pending' || state.filters.status == '') {
       let todoData = state.todos.data
-      todoData.unshift(todo)
+      todoData.unshift(newTodo)
       Vue.set(state.todos, 'data', todoData)
     }
   },
@@ -78,6 +92,17 @@ const mutations = {
     for (const [key, value] of Object.entries(filterData)) {
       state.filters[key] = value
     }
+  },
+
+  updateTodo(state, updatedTodo) {
+    let todoData = state.todos.data
+    todoData = todoData.map(todo => {
+      if (todo.id == updatedTodo.id) {
+        return updatedTodo
+      }
+      return todo
+    })
+    Vue.set(state.todos, 'data', todoData)
   }
 };
 
