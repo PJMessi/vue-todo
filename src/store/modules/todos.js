@@ -50,10 +50,10 @@ const actions = {
     }
   },
 
-  updateTodo: async function({commit}, todo) {
+  updateTodo: async function({commit}, todoData) {
     try {
     
-      const res = await axios.put(`http://localhost:8000/api/todos/${todo.id}`, todo )
+      const res = await axios.put(`http://localhost:8000/api/todos/${todoData.id}`, todoData )
 
       const updatedTodo = res.data.data
 
