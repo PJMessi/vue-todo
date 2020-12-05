@@ -2,25 +2,25 @@ import axios from 'axios';
 import Vue from 'vue';
 
 const state = {
-  todos: { data:[] },
+  todos: {docs:[]},
   filters: {
     limit: 15,
-    sort_by: 'id',
-    sort_order: 'desc',
+    sortBy: '_id',
+    sortOrder: 'desc',
     q: '',
     status: ''
   }
 };
 
 const getters = {
-  todos: state => state.todos.data,
+  todos: state => state.todos.docs,
   todosFilter: state => state.filters
 };
 
 const actions = {
   fetchTodos: async function({commit}, url=null) {
     try {
-      url = url ? url : `http://localhost:8000/api/todos`
+      url = url ? url : `http://localhost:5000/todos`
   
       const res = await axios.get(url, { params: state.filters })
   
@@ -32,14 +32,14 @@ const actions = {
 
     } catch (err) {
       console.log(err)
+
     }
   },
 
 
   createTodo: async function({commit}, todoData) {
-    try {
-    
-      const res = await axios.post('http://localhost:8000/api/todos', todoData )
+    try {    
+      const res = await axios.post('http://localhost:5000/todos', todoData )
 
       const newTodo = res.data.data
 
@@ -47,13 +47,16 @@ const actions = {
 
     } catch (err) {
       console.log(err)
+
     }
   },
 
   updateTodo: async function({commit}, todoData) {
-    try {
-    
-      const res = await axios.put(`http://localhost:8000/api/todos/${todoData.id}`, todoData )
+    try {    
+      const todoId = todoData._id
+      delete todoData['_id'] 
+
+      const res = await axios.put(`http://localhost:5000/todos/${todoId}`, todoData )
 
       const updatedTodo = res.data.data
 
@@ -61,6 +64,7 @@ const actions = {
 
     } catch (err) {
       console.log(err)
+
     }
   },
 
@@ -70,6 +74,27 @@ const actions = {
 
     } catch (err) {
       console.log(err)
+
+    }
+  },
+
+  addReceivedTodo: function({commit}, newTodo) {
+    try {
+      commit('addTodo', newTodo)
+
+    } catch (err) {
+      console.log(err)
+
+    }
+  },
+
+  updateReceivedTodo: function({commit}, updatedTodo) {
+    try {
+      commit('updateTodo', updatedTodo)
+
+    } catch (err) {
+      console.log(err)
+
     }
   }
 
@@ -82,7 +107,7 @@ const mutations = {
 
   addTodo(state, newTodo) {
     if (state.filters.status == 'pending' || state.filters.status == '') {
-      let todoData = state.todos.data
+      let todoData = state.todos.docs
       todoData.unshift(newTodo)
       Vue.set(state.todos, 'data', todoData)
     }
@@ -95,14 +120,14 @@ const mutations = {
   },
 
   updateTodo(state, updatedTodo) {
-    let todoData = state.todos.data
+    let todoData = state.todos.docs
     todoData = todoData.map(todo => {
-      if (todo.id == updatedTodo.id) {
+      if (todo._id == updatedTodo._id) {
         return updatedTodo
       }
       return todo
     })
-    Vue.set(state.todos, 'data', todoData)
+    Vue.set(state.todos, 'docs', todoData)
   }
 };
 

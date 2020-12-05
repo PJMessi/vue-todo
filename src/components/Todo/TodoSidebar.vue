@@ -77,9 +77,6 @@
         <li :class="{'active': todosFilter.status == 'pending'}">
           <a href="#" @click.prevent="updateTodoFilters({status: 'pending'})"><i class="fas fa-trash"></i>Pending</a>
         </li>
-        <li :class="{'active': todosFilter.status == 'inprogress'}">
-          <a href="#" @click.prevent="updateTodoFilters({status: 'inprogress'})"><i class="fas fa-trash"></i>In Progress</a>
-        </li>
         <li :class="{'active': todosFilter.status == 'finished'}">
           <a href="#" @click.prevent="updateTodoFilters({status: 'finished'})"><i class="fas fa-check"></i>Completed</a>
         </li>

@@ -22,7 +22,7 @@ const actions = {
 
       commit('auth_request')
 
-      const resp = await axios.post('http://localhost:8000/api/auth/login', credential )
+      const resp = await axios.post('http://localhost:5000/auth/login', credential )
           
       const token = resp.data.data.token
       localStorage.setItem('token', token)
@@ -48,21 +48,16 @@ const actions = {
   },
 
   logout({commit}){
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
 
-      axios({url: 'http://localhost:8000/api/auth/logout', data: {}, method: 'POST' })
-      .then(resp => {     
-        // Removing token from local storage and Vuex.
+
         commit('logout')
         localStorage.removeItem('token')
         localStorage.removeItem('user')
         delete axios.defaults.headers.common['Authorization']
 
-        resolve(resp)
-      })
-      .catch(err => {
-        reject(err)
-      })
+        resolve()
+  
 
     })
   },

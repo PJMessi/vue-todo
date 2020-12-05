@@ -61,33 +61,36 @@ import Sidebar from "../components/Sidebar";
 import TodoSidebar from "../components/Todo/TodoSidebar";
 import TodoList from "../components/Todo/TodoList"
 import TopNavivation from "../components/TopNavigation"
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
+import Pusher from "pusher-js";
+import axios from 'axios';
 
 export default {
   name: "TodoApp",
 
   components: { Sidebar, TodoSidebar, TodoList, TopNavivation },
 
+  created: function() {
+    this.subscribe()
+  },
+
   computed: {
     ...mapGetters(["authUser", "isLoggedIn", "authToken"])
   },
 
   watch: {
-    /**
-     * If user is logged out, redirect users to the login page.
-     */
+
     isLoggedIn: function(newValue) {
       if (newValue != true) {
         this.$router.push('/login')
       }
     }
+
   },
 
   methods: {
-    /**
-     * Intercepts the 401 request of the axios and then clears tokens.
-     * We should put this in App.vue. For for this app, Chat.vue acts like App.vue, so we are putting here.
-     */
+    ...mapActions(['addReceivedTodo', 'updateReceivedTodo']),
+
     interceptAxios401: function () {
       let store = this.$store;
       // let router = this.$router;
@@ -109,6 +112,51 @@ export default {
         }
       );
     },
+
+
+    subscribe: function () {
+
+      const pusher = new Pusher("c004ff36b2f98f38257f", {
+        cluster: "ap2",
+        authEndpoint: "http://localhost:5000/broadcasting/auth",
+        auth: {
+          headers: {
+            Authorization: "Bearer " + this.authToken,
+            Accept: "application/json",
+          },
+        },
+      });
+
+      pusher.connection.bind("connected", function () {
+        let socketId = pusher.connection.socket_id;
+        axios.defaults.headers.common["X-Socket-ID"] = socketId;
+      });
+
+      // subscribing to the pusher channel
+      const todoChannel = pusher.subscribe(
+        `private-todoChannel-${this.authUser._id}`
+      );
+
+      // pusher.subscribe(
+      //   `other-channel-${this.authUser.id}`
+      // );
+
+      todoChannel.bind('TodoCreated', (e) => {
+        const newTodo = e.data
+
+        this.addReceivedTodo(newTodo)
+
+      })
+
+      todoChannel.bind('TodoUpdated', (e) => {
+        const updatedTodo = e.data
+
+        this.updateReceivedTodo(updatedTodo)
+
+      })
+
+    },
+
   }
   
 };

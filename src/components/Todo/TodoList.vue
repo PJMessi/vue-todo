@@ -4,12 +4,12 @@
       <div class="todo-list">
         <ul class="list-unstyled">
 
-          <li v-for="todo in todos" :key="todo.id">
-            <a href="javascript: void(0);" class="custom-checkbox" :class="{'done': todo.status == 'finished'}">
+          <li v-for="todo in todos" :key="todo._id">
+            <a href="javascript: void(0);" class="custom-checkbox" :class="{'done': todo.status == 'completed'}">
 
-              <input type="checkbox" class="custom-control-input" :id="todo.id" :checked="todo.status == 'finished'" @click.prevent="updateTodoStatus(todo)" />
+              <input type="checkbox" class="custom-control-input" :id="todo._id" :checked="todo.status == 'completed'" @click.prevent="updateTodoStatus(todo)" />
 
-              <label class="custom-control-label" :for="todo.id"></label>
+              <label class="custom-control-label" :for="todo._id"></label>
 
               {{todo.name}}
               
@@ -39,15 +39,14 @@ export default {
     ...mapActions(['fetchTodos', 'updateTodoFilters', 'updateTodo']),
 
     updateTodoStatus: function (todo) {
-      console.log('updating')
       let todoData = {
-        id: todo.id
+        _id: todo._id
       }
 
-      if (todo.status == 'finished') {
+      if (todo.status == 'completed') {
         todoData.status = 'pending'
       } else {
-        todoData.status = 'finished'
+        todoData.status = 'completed'
       }
       this.updateTodo(todoData)
     }
