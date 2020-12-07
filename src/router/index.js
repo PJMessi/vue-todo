@@ -6,6 +6,11 @@ Vue.use(VueRouter)
 
 const routes = [
   {
+    path: '/login',
+    name: 'Login'
+  },
+
+  {
     path: '/',
     name: 'Todo',    
     component: () => import('../views/Todo.vue'),
@@ -13,9 +18,12 @@ const routes = [
   },
 
   {
-    path: '/login',
-    name: 'Login'
+    path: '/packages',
+    name: 'Package',    
+    component: () => import('../views/Package.vue'),
+    meta: { auth: true },
   },
+
 
   {
     path: '/webhooks/esewa/:status',

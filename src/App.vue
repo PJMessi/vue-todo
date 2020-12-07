@@ -52,6 +52,7 @@ export default {
 
   created: function() {
     if (this.$route.name != 'Login') {
+      this.fetchProfile()
       this.subscribe()
     }
   },
@@ -71,7 +72,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(['addReceivedTodo', 'updateReceivedTodo']),
+    ...mapActions(['addReceivedTodo', 'updateReceivedTodo', 'fetchProfile']),
 
     interceptAxios401: function () {
       let store = this.$store;

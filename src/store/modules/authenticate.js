@@ -16,6 +16,21 @@ const getters = {
 };
 
 const actions = {
+  fetchProfile: async function ({commit}) {
+    try {
+      const resp = await axios.get('http://localhost:5000/customer/auth/profile' )
+      
+      const user = resp.data.data
+
+      localStorage.setItem('user', JSON.stringify(user))
+
+      commit('setUser', user)
+
+    } catch (err) {
+      console.log(err)
+    }
+  },
+
   login: async function ({commit}, credential) {
    
     try {
@@ -98,6 +113,10 @@ const mutations = {
 
   error_message(state, message) {
     state.errorMessage = message
+  },
+
+  setUser(state, user) {
+    state.user = user
   }
 
 };

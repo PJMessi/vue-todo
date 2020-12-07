@@ -129,7 +129,7 @@ export default {
         pdc: 0,
         txAmt: 0,
         tAmt: 100,
-        pid: "5fccfcab9853dd57df6e1951",
+        pid: "5fce2a1578ed5d24341569df",
         scd: "EPAYTEST",
         su: "http://localhost:8080/#/webhooks/esewa/success",
         fu: "http://localhost:8080/#/webhooks/esewa/failed"

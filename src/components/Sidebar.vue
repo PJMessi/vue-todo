@@ -12,9 +12,15 @@
       <ul class="accordion-menu">
         <li class="sidebar-title">Apps</li>
 
-        <li :class="{'active-page': getRouteName() == 'TodoApp'}">
-          <router-link to="/" active-class="active"
+        <li :class="{'active-page': getRouteName() == 'Todo'}">
+          <router-link to="/" exact-active-class="active"
             ><i class="material-icons-outlined">dashboard</i>Dashboard</router-link
+          >
+        </li>
+
+        <li :class="{'active-page': getRouteName() == 'Package'}">
+          <router-link to="/packages" active-class="active"
+            ><i class="material-icons-outlined">card_membership</i>Packages</router-link
           >
         </li>
 
