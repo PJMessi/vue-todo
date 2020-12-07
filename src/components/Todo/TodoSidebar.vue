@@ -69,6 +69,12 @@
       </div>
     </div>
 
+    <div class="todo-new-task mt-3">
+      <button class="btn btn-primary btn-block" @click.prevent="donate">
+        Donate Rs. 20
+      </button>
+    </div>
+
     <div class="todo-menu">
       <ul class="list-unstyled">
         <li :class="{'active': todosFilter.status == ''}">
@@ -77,8 +83,8 @@
         <li :class="{'active': todosFilter.status == 'pending'}">
           <a href="#" @click.prevent="updateTodoFilters({status: 'pending'})"><i class="fas fa-trash"></i>Pending</a>
         </li>
-        <li :class="{'active': todosFilter.status == 'finished'}">
-          <a href="#" @click.prevent="updateTodoFilters({status: 'finished'})"><i class="fas fa-check"></i>Completed</a>
+        <li :class="{'active': todosFilter.status == 'completed'}">
+          <a href="#" @click.prevent="updateTodoFilters({status: 'completed'})"><i class="fas fa-check"></i>Completed</a>
         </li>
       </ul>
     </div>
@@ -115,7 +121,19 @@ export default {
         description: ''
       },
 
-      searchTerm: ''
+      searchTerm: '',
+
+      esewa: {
+        amt: 100,
+        psc: 0,
+        pdc: 0,
+        txAmt: 0,
+        tAmt: 100,
+        pid: "5fccfcab9853dd57df6e1951",
+        scd: "EPAYTEST",
+        su: "http://localhost:8080/#/webhooks/esewa/success",
+        fu: "http://localhost:8080/#/webhooks/esewa/failed"
+      }
     }
   },
 
@@ -142,7 +160,25 @@ export default {
     
     debounceInput: _.debounce(function (e) {
       this.searchTerm = e.target.value
-    }, 500)
+    }, 500),
+
+
+    donate() {
+      var form = document.createElement("form");
+      form.setAttribute("method", "POST");
+      form.setAttribute("action", "https://uat.esewa.com.np/epay/main");
+
+      for(var key in this.esewa) {
+          var hiddenField = document.createElement("input");
+          hiddenField.setAttribute("type", "hidden");
+          hiddenField.setAttribute("name", key);
+          hiddenField.setAttribute("value", this.esewa[key]);
+          form.appendChild(hiddenField);
+      }
+
+      document.body.appendChild(form);
+      form.submit();
+    }
     
   }
 };

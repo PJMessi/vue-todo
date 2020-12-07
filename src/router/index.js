@@ -18,7 +18,16 @@ const routes = [
     path: '/login',
     name: 'Login',    
     component: () => import('../views/Login.vue')
-  }
+  },
+
+  {
+    path: '/webhooks/esewa/:status',
+    name: 'EsewaWebhook',    
+    component: () => import('../views/esewaWebhook.vue'),
+    meta: {
+      auth: true
+    },
+  },
 ]
 
 const router = new VueRouter({

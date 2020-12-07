@@ -118,7 +118,7 @@ export default {
 
       const pusher = new Pusher("c004ff36b2f98f38257f", {
         cluster: "ap2",
-        authEndpoint: "http://localhost:5000/broadcasting/auth",
+        authEndpoint: "http://localhost:5000/customer/broadcasting/auth",
         auth: {
           headers: {
             Authorization: "Bearer " + this.authToken,

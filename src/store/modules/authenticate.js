@@ -22,12 +22,12 @@ const actions = {
 
       commit('auth_request')
 
-      const resp = await axios.post('http://localhost:5000/auth/login', credential )
+      const resp = await axios.post('http://localhost:5000/customer/auth/login', credential )
           
       const token = resp.data.data.token
       localStorage.setItem('token', token)
       
-      const user = resp.data.data.user
+      const user = resp.data.data.customer
       localStorage.setItem('user', JSON.stringify(user))
   
       axios.defaults.headers.common['Authorization'] = "Bearer " + token
