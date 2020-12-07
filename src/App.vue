@@ -16,33 +16,8 @@
           <div class="page-container">
             <TopNavivation />
 
-            <div class="page-content">
-              <div class="page-info">
-                <nav aria-label="breadcrumb">
-                  <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="#">Apps</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">
-                      Todo
-                    </li>
-                  </ol>
-                </nav>
-              </div>
-              <div class="main-wrapper">
-                <div class="row">
-                  <div class="col-lg-3">
-                    <div class="card">
-                      <div class="card-body">
-                        <TodoSidebar />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="col-lg-9">
-                    <TodoList />
-                  </div>
-                </div>
-              </div>
-            </div>
+            <router-view/>
+            
             <div class="page-footer">
               <div class="row">
                 <div class="col-md-12">
@@ -64,8 +39,7 @@
 <script>
 import Login from "./components/Login";
 import Sidebar from "./components/Sidebar";
-import TodoSidebar from "./components/Todo/TodoSidebar";
-import TodoList from "./components/Todo/TodoList"
+
 import TopNavivation from "./components/TopNavigation"
 import { mapGetters, mapActions } from "vuex";
 import Pusher from "pusher-js";
@@ -74,7 +48,7 @@ import axios from 'axios';
 export default {
   name: "App",
 
-  components: { Login, Sidebar, TodoSidebar, TodoList, TopNavivation },
+  components: { Login, Sidebar, TopNavivation },
 
   created: function() {
     if (this.$route.name != 'Login') {
@@ -120,7 +94,6 @@ export default {
         }
       );
     },
-
 
     subscribe: function () {
 

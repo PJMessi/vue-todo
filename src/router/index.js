@@ -7,26 +7,21 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    name: 'TodoApp',    
-    component: () => import('../views/TodoApp.vue'),
-    meta: {
-      auth: true
-    },
+    name: 'Todo',    
+    component: () => import('../views/Todo.vue'),
+    meta: { auth: true },
   },
 
   {
     path: '/login',
-    name: 'Login',    
-    // component: () => import('../views/Login.vue')
+    name: 'Login'
   },
 
   {
     path: '/webhooks/esewa/:status',
     name: 'EsewaWebhook',    
     component: () => import('../views/esewaWebhook.vue'),
-    meta: {
-      auth: true
-    },
+    meta: { auth: true },
   },
 ]
 
