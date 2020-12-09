@@ -51,10 +51,13 @@ export default {
   components: { Login, Sidebar, TopNavivation },
 
   created: function() {
+    this.interceptAxios401()
+    
     if (this.$route.name != 'Login') {
       this.fetchProfile()
       this.subscribe()
     }
+
   },
 
   computed: {

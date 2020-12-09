@@ -61,13 +61,7 @@ export default {
         this.message = "Payment is being confirmed....";
         this.messageClass = "info";
 
-        const data = {
-          referenceNumber: this.$route.query.refId,
-          totalAmount: this.$route.query.amt,
-          productId: this.$route.query.oid,
-        };
-
-        await axios.post("http://localhost:5000/customer/payments/esewa", data);
+        await axios.post("http://localhost:5000/customer/payments/esewa", this.$route.query);
 
         await this.fetchProfile();
 

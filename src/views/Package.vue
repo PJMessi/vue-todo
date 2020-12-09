@@ -33,14 +33,38 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="paymentPackage in packages" :key="paymentPackage._id">
-                        <td>{{paymentPackage.name}}</td>
-                        <td>Rs {{paymentPackage.price}}</td>
-                        <td>{{paymentPackage.duration}} Months</td>
-                        <td>{{paymentPackage.description}}</td>
+                      <tr
+                        v-for="paymentPackage in packages"
+                        :key="paymentPackage._id"
+                      >
+                        <td>{{ paymentPackage.name }}</td>
+                        <td>Rs {{ paymentPackage.price }}</td>
+                        <td>{{ paymentPackage.duration }} Months</td>
+                        <td>{{ paymentPackage.description }}</td>
                         <td>
-                            <span v-if="activePackageId == paymentPackage._id" class="badge badge-success">Active</span>
-                            <button v-if="!activePackageId" type="button" class="btn btn-primary btn-xs" @click="subscribe(paymentPackage, 'esewa')">Subscribe</button>
+                          <span
+                            v-if="activePackageId == paymentPackage._id"
+                            class="badge badge-success"
+                            >Active</span
+                          >
+
+                          <button
+                            v-if="!activePackageId"
+                            type="button"
+                            class="btn btn-primary btn-xs"
+                            @click="subscribe(paymentPackage, 'esewa')"
+                          >
+                            Subscribe with esewa
+                          </button>
+
+                          <button
+                            v-if="!activePackageId"
+                            type="button"
+                            class="btn btn-primary btn-xs"
+                            @click="subscribeWithKhalti(paymentPackage)"
+                          >
+                            Subscribe with Khalti
+                          </button>
                         </td>
                       </tr>
                     </tbody>
@@ -57,24 +81,16 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import KhaltiCheckout from "khalti-web";
+import axios from 'axios'
 
 export default {
   name: "Package",
 
   data() {
-      return {
-          esewa: {
-            amt: 100,
-            psc: 0,
-            pdc: 0,
-            txAmt: 0,
-            tAmt: 100,
-            pid: "5fce2a1578ed5d24341569df",
-            scd: "EPAYTEST",
-            su: "http://localhost:8080/#/webhooks/esewa/success",
-            fu: "http://localhost:8080/#/webhooks/esewa/failed"
-        }
-      }
+    return {
+      
+    };
   },
 
   created() {
@@ -84,57 +100,109 @@ export default {
   computed: {
     ...mapGetters(["authUser", "packages"]),
 
-    activePackageId: function() {
-        const subscription = this.authUser.subscriptions[0]
-        if (!subscription) return null
+    activePackageId: function () {
+      const subscription = this.authUser.subscriptions[0];
+      if (!subscription) return null;
 
-        return subscription.paymentPackage
-    }
+      return subscription.paymentPackage;
+    },
   },
 
   methods: {
-    ...mapActions(["fetchPackages"]),
+    ...mapActions(["fetchPackages", "fetchProfile"]),
 
     subscribe(paymentPackage, gateway) {
-        if (gateway == 'esewa') {
-            this.subscribeWithEsewa(paymentPackage)
-        } 
+      if (gateway == "esewa") {
+        this.subscribeWithEsewa(paymentPackage);
+      } else if (gateway == "khalti") {
+        this.subscribeWithKhalti(paymentPackage);
+      }
     },
 
     subscribeWithEsewa(paymentPackage) {
-        const packageAmount = paymentPackage.price
-        const taxAmount = 0
-        const serviceCharge = 0
-        const deliveryCharge = 0
-        const totalAmount = packageAmount + taxAmount + serviceCharge + deliveryCharge
+      const packageAmount = paymentPackage.price;
+      const taxAmount = 0;
+      const serviceCharge = 0;
+      const deliveryCharge = 0;
+      const totalAmount =
+        packageAmount + taxAmount + serviceCharge + deliveryCharge;
 
-        const esewa = {
-            amt: packageAmount,
-            psc: serviceCharge,
-            pdc: deliveryCharge,
-            txAmt: taxAmount,
-            tAmt: totalAmount,
-            pid: paymentPackage._id,
-            scd: "EPAYTEST",
-            su: "http://localhost:8080/#/webhooks/esewa/success",
-            fu: "http://localhost:8080/#/webhooks/esewa/failed"
-        }
+      const esewa = {
+        amt: packageAmount,
+        psc: serviceCharge,
+        pdc: deliveryCharge,
+        txAmt: taxAmount,
+        tAmt: totalAmount,
+        pid: paymentPackage._id,
+        scd: "EPAYTEST",
+        su: "http://localhost:8080/#/webhooks/esewa/success",
+        fu: "http://localhost:8080/#/webhooks/esewa/failed",
+      };
 
-        var form = document.createElement("form");
-        form.setAttribute("method", "POST");
-        form.setAttribute("action", "https://uat.esewa.com.np/epay/main");
+      var form = document.createElement("form");
+      form.setAttribute("method", "POST");
+      form.setAttribute("action", "https://uat.esewa.com.np/epay/main");
 
-        for(var key in esewa) {
-            var hiddenField = document.createElement("input");
-            hiddenField.setAttribute("type", "hidden");
-            hiddenField.setAttribute("name", key);
-            hiddenField.setAttribute("value", esewa[key]);
-            form.appendChild(hiddenField);
-        }
+      for (var key in esewa) {
+        var hiddenField = document.createElement("input");
+        hiddenField.setAttribute("type", "hidden");
+        hiddenField.setAttribute("name", key);
+        hiddenField.setAttribute("value", esewa[key]);
+        form.appendChild(hiddenField);
+      }
 
-        document.body.appendChild(form);
-        form.submit();
-    }
+      document.body.appendChild(form);
+      form.submit();
+    },
+
+    subscribeWithKhalti(paymentPackage) {
+      let vm = this
+
+      let khaltiConfig = {
+        publicKey: "test_public_key_f7bab8da45fc4156b98c860083a304ef",
+        productIdentity: paymentPackage._id,
+        productName: paymentPackage.name,
+        productUrl: "http://localhost:8080/#/packages",
+        amount: paymentPackage.price*100,
+        eventHandler: {
+          onSuccess(payload) {
+            vm.handleKhaltiSubscription(payload)            
+
+          },
+          onError(error) {
+            console.log(error);
+          },
+          onClose() {
+            console.log("widget is closing");
+          },
+        },
+      }
+
+    
+      let checkout = new KhaltiCheckout(khaltiConfig);
+      checkout.show({ amount: khaltiConfig.amount });
+    },
+
+    handleKhaltiSubscription(payload) {
+      axios.post('http://localhost:5000/customer/payments/khalti', payload)
+        .then(res => {
+          console.log(res)
+          this.fetchProfile().then(() => {
+            this.$Toast.fire({
+              icon: 'success',
+              title: 'Subscription successful'
+            })
+          })
+
+        })
+        .catch(err => {
+          console.log(err)
+          this.$Toast.fire({
+              icon: 'error',
+              title: 'Subscription failed'
+            })
+        })
+    },
   },
 };
 </script>
