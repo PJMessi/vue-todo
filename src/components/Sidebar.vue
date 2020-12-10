@@ -1,7 +1,7 @@
 <template>
   <div class="page-sidebar">
     <div class="logo-box">
-      <a href="#" class="logo-text">Connect</a
+      <router-link to="/" class="logo-text">Todo</router-link
       ><a href="#" id="sidebar-close"><i class="material-icons">close</i></a>
       <a href="#" id="sidebar-state"
         ><i class="material-icons">adjust</i
@@ -12,8 +12,14 @@
       <ul class="accordion-menu">
         <li class="sidebar-title">Apps</li>
 
-        <li :class="{'active-page': getRouteName() == 'Todo'}">
+        <li :class="{'active-page': getRouteName() == 'Dashboard'}">
           <router-link to="/" exact-active-class="active"
+            ><i class="material-icons-outlined">dashboard</i>Dasboard</router-link
+          >
+        </li>
+
+        <li :class="{'active-page': getRouteName() == 'Todo'}">
+          <router-link to="/todos" active-class="active"
             ><i class="material-icons-outlined">toc</i>Todos</router-link
           >
         </li>

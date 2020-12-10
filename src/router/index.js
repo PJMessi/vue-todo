@@ -12,6 +12,13 @@ const routes = [
 
   {
     path: '/',
+    name: 'Dashboard',    
+    component: () => import('../views/Dashboard.vue'),
+    meta: { auth: true },
+  },
+
+  {
+    path: '/todos',
     name: 'Todo',    
     component: () => import('../views/Todo.vue'),
     meta: { auth: true },
@@ -28,7 +35,7 @@ const routes = [
   {
     path: '/webhooks/esewa/:status',
     name: 'EsewaWebhook',    
-    component: () => import('../views/esewaWebhook.vue'),
+    component: () => import('../views/EsewaWebhook.vue'),
     meta: { auth: true },
   },
 ]

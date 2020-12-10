@@ -3,8 +3,8 @@
     <div class="page-info">
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="#">Apps</a></li>
-          <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+          <li class="breadcrumb-item"><router-link to="/">Dashboard</router-link></li>
+          <li class="breadcrumb-item active" aria-current="page">Todos</li>
         </ol>
       </nav>
     </div>
