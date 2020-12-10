@@ -31,7 +31,6 @@
             </div>
             <div class="modal-body">
               <form>
-
                 <div class="form-group">
                   <input
                     v-model="todo.name"
@@ -51,40 +50,49 @@
                     placeholder="Task Description"
                   />
                 </div>
-
               </form>
             </div>
             <div class="modal-footer">
               <button
+                id="todoModalClostBtn"
                 type="button"
                 class="btn btn-secondary"
                 data-dismiss="modal"
               >
                 Cancel
               </button>
-              <button type="button" class="btn btn-primary" @click.prevent="createTodo(todo)">Add</button>
+              <button
+                type="button"
+                class="btn btn-primary"
+                @click.prevent="createTodo(todo)"
+              >
+                Add
+              </button>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="todo-new-task mt-3">
-      <button class="btn btn-primary btn-block" @click.prevent="donate">
-        Donate Rs. 20
-      </button>
-    </div>
-
     <div class="todo-menu">
       <ul class="list-unstyled">
-        <li :class="{'active': todosFilter.status == ''}">
-          <a href="#" @click.prevent="updateTodoFilters({status: ''})"><i class="fas fa-bars"></i>All</a>
+        <li :class="{ active: todosFilter.status == '' }">
+          <a href="#" @click.prevent="updateTodoFilters({ status: '' })"
+            ><i class="material-icons md-18">menu</i>All</a
+          >
         </li>
-        <li :class="{'active': todosFilter.status == 'pending'}">
-          <a href="#" @click.prevent="updateTodoFilters({status: 'pending'})"><i class="fas fa-trash"></i>Pending</a>
+        <li :class="{ active: todosFilter.status == 'pending' }">
+          <a href="#" @click.prevent="updateTodoFilters({ status: 'pending' })">
+            <i class="material-icons md-18">hourglass_bottom</i>Pending
+          </a>
         </li>
-        <li :class="{'active': todosFilter.status == 'completed'}">
-          <a href="#" @click.prevent="updateTodoFilters({status: 'completed'})"><i class="fas fa-check"></i>Completed</a>
+        <li :class="{ active: todosFilter.status == 'completed' }">
+          <a
+            href="#"
+            @click.prevent="updateTodoFilters({ status: 'completed' })"
+          >
+            <i class="material-icons md-18">done</i>Completed
+          </a>
         </li>
       </ul>
     </div>
@@ -111,75 +119,70 @@
 import { mapActions, mapGetters } from 'vuex';
 import _ from 'lodash';
 export default {
-  name: "TodoSidebar",
+  name: 'TodoSidebar',
 
   data() {
     return {
       todo: {
         name: '',
         status: 'pending',
-        description: ''
+        description: '',
       },
 
       searchTerm: '',
-
-      esewa: {
-        amt: 100,
-        psc: 0,
-        pdc: 0,
-        txAmt: 0,
-        tAmt: 100,
-        pid: "5fce2a1578ed5d24341569df",
-        scd: "EPAYTEST",
-        su: "http://localhost:8080/#/webhooks/esewa/success",
-        fu: "http://localhost:8080/#/webhooks/esewa/failed"
-      }
-    }
+    };
   },
 
   watch: {
     todosFilter: {
       handler: function() {
-        this.fetchTodos()
+        this.fetchTodos();
       },
-      deep: true
+      deep: true,
+    },
+
+    todoBeingCreated: function(newValue) {
+      if (newValue == false) {
+        this.todo.name = '';
+        this.todo.status = 'pending';
+        this.todo.description = '';
+
+        document.getElementById('todoModalClostBtn').click()
+      }
     },
 
     searchTerm: function(newValue) {
-      this.updateTodoFilters({q: newValue})
-    }
+      this.updateTodoFilters({ q: newValue });
+    },
   },
 
   computed: {
-    ...mapGetters(['todosFilter'])
+    ...mapGetters(['todosFilter', 'todos', 'todoBeingCreated']),
   },
 
   methods: {
     ...mapActions(['createTodo', 'updateTodoFilters', 'fetchTodos']),
 
-    
-    debounceInput: _.debounce(function (e) {
-      this.searchTerm = e.target.value
+    debounceInput: _.debounce(function(e) {
+      this.searchTerm = e.target.value;
     }, 500),
 
 
-    donate() {
-      var form = document.createElement("form");
-      form.setAttribute("method", "POST");
-      form.setAttribute("action", "https://uat.esewa.com.np/epay/main");
-
-      for(var key in this.esewa) {
-          var hiddenField = document.createElement("input");
-          hiddenField.setAttribute("type", "hidden");
-          hiddenField.setAttribute("name", key);
-          hiddenField.setAttribute("value", this.esewa[key]);
-          form.appendChild(hiddenField);
-      }
-
-      document.body.appendChild(form);
-      form.submit();
-    }
-    
-  }
+  },
 };
 </script>
+
+<style scoped>
+.material-icons.md-18 {
+  font-size: 18px;
+}
+.material-icons.md-24 {
+  font-size: 24px;
+}
+.material-icons.md-36 {
+  font-size: 36px;
+}
+.material-icons.md-48 {
+  font-size: 48px;
+}
+</style>

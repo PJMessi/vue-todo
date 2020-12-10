@@ -14,7 +14,7 @@
 
         <li :class="{'active-page': getRouteName() == 'Todo'}">
           <router-link to="/" exact-active-class="active"
-            ><i class="material-icons-outlined">dashboard</i>Dashboard</router-link
+            ><i class="material-icons-outlined">toc</i>Todos</router-link
           >
         </li>
 

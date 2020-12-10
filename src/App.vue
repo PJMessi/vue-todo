@@ -75,7 +75,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(['addReceivedTodo', 'updateReceivedTodo', 'fetchProfile']),
+    ...mapActions(['addReceivedTodo', 'updateReceivedTodo', 'deleteReceivedTodo', 'fetchProfile']),
 
     interceptAxios401: function () {
       let store = this.$store;
@@ -137,6 +137,13 @@ export default {
         const updatedTodo = e.data
 
         this.updateReceivedTodo(updatedTodo)
+
+      })
+
+      todoChannel.bind('TodoDeleted', (e) => {
+        const todoToBeDeleted = e.data
+
+        this.deleteReceivedTodo(todoToBeDeleted)
 
       })
 
