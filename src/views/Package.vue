@@ -60,7 +60,7 @@
                           <button
                             v-if="!activePackageId"
                             type="button"
-                            class="btn btn-primary btn-xs"
+                            class="btn btn-primary btn-xs ml-2"
                             @click="subscribeWithKhalti(paymentPackage)"
                           >
                             Subscribe with Khalti

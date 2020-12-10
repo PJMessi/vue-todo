@@ -140,6 +140,13 @@ export default {
 
       })
 
+      todoChannel.bind('Subscribed', (e) => {
+        console.log(e.data)
+
+        this.fetchProfile()
+
+      })
+
     },
 
   }
