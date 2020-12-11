@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <Login v-if="$route.name == 'Login'" />
+    <Register v-else-if="$route.name == 'Register'" />
 
     <div v-else>
       <div>
@@ -39,7 +40,7 @@
 <script>
 import Login from "./components/Login";
 import Sidebar from "./components/Sidebar";
-
+import Register from './components/Register'
 import TopNavivation from "./components/TopNavigation"
 import { mapGetters, mapActions } from "vuex";
 import Pusher from "pusher-js";
@@ -48,12 +49,12 @@ import axios from 'axios';
 export default {
   name: "App",
 
-  components: { Login, Sidebar, TopNavivation },
+  components: { Login, Register, Sidebar, TopNavivation },
 
   created: function() {
     this.interceptAxios401()
     
-    if (this.$route.name != 'Login') {
+    if (this.$route.name != 'Login' && this.$route.name != 'Register') {
       this.fetchProfile()
       this.subscribe()
     }

@@ -101,6 +101,9 @@ export default {
     ...mapGetters(["authUser", "packages"]),
 
     activePackageId: function () {
+      const subscriptions = this.authUser.subscriptions
+      if (!subscriptions) return null;
+      
       const subscription = this.authUser.subscriptions[0];
       if (!subscription) return null;
 

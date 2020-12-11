@@ -13,6 +13,16 @@
                   <form>
                     <div class="form-group">
                       <input
+                        v-model="form.name"
+                        type="text"
+                        class="form-control"
+                        id="name"
+                        aria-describedby="nameHelp"
+                        placeholder="Enter name"
+                      />
+                    </div>
+                    <div class="form-group">
+                      <input
                         v-model="form.email"
                         type="email"
                         class="form-control"
@@ -30,26 +40,22 @@
                         placeholder="Password"
                       />
                     </div>
+                    <div class="form-group">
+                      <input
+                        v-model="form.password_confirmation"
+                        type="password"
+                        class="form-control"
+                        id="password_confirmation"
+                        placeholder="Confirm password"
+                      />
+                    </div>
                     <button
-                    @click.prevent="login(form)"
+                    @click.prevent="register(form)"
                       type="submit"
                       class="btn btn-primary btn-block btn-submit"
                     >
-                      Sign In
+                      Sign Up
                     </button>
-                    <div class="auth-options">
-                      <div class="custom-control custom-checkbox form-group">
-                        <input
-                          type="checkbox"
-                          class="custom-control-input"
-                          id="exampleCheck1"
-                        />
-                        <label class="custom-control-label" for="exampleCheck1"
-                          >Remember me</label
-                        >
-                      </div>
-                      <a href="#" class="forgot-link">Forgot Password?</a>
-                    </div>
                   </form>
                 </div>
               </div>
@@ -69,7 +75,7 @@
 import { mapActions, mapGetters } from "vuex";
 
 export default {
-  name: "Login",
+  name: "Register",
 
   computed: {
     ...mapGetters(["authUser", "authErrorMessage", "isLoggedIn"]),
@@ -86,14 +92,16 @@ export default {
   data() {
     return {
       form: {
-        email: "anishamaharjan04@gmail.com",
-        password: "password",
+        name: "",
+        email: "",
+        password: "",
+        password_confirmation: "",
       },
     };
   },
 
   methods: {
-    ...mapActions(["login"]),
+    ...mapActions(["register"]),
   },
 
 
