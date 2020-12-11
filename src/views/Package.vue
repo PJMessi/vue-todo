@@ -33,7 +33,12 @@
                       </tr>
                     </thead>
                     <tbody>
+                      <tr v-if="packages.length==0">
+                        <td colspan="5">No packages found...</td>
+                      </tr>
+
                       <tr
+                        v-else
                         v-for="paymentPackage in packages"
                         :key="paymentPackage._id"
                       >
@@ -103,7 +108,7 @@ export default {
     activePackageId: function () {
       const subscriptions = this.authUser.subscriptions
       if (!subscriptions) return null;
-      
+
       const subscription = this.authUser.subscriptions[0];
       if (!subscription) return null;
 

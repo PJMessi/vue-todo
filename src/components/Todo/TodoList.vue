@@ -4,7 +4,11 @@
       <div class="todo-list">
         <ul class="list-unstyled">
 
-          <li v-for="todo in todos" :key="todo._id">
+          <li v-if="todos.length == 0">
+            <a href="javascript:void(0)">No todos found...</a>
+          </li>
+
+          <li v-else v-for="todo in todos" :key="todo._id">
             <a href="javascript: void(0);" class="custom-checkbox" :class="{'done': todo.status == 'completed'}">
               <span>
                 <input :disabled="busyTodos.includes(todo._id)" type="checkbox" class="custom-control-input" :id="todo._id" :checked="todo.status == 'completed'" @click.prevent="updateTodoStatus(todo)" />
@@ -34,16 +38,12 @@ import { mapGetters, mapActions } from "vuex"
 export default {
   name: "TodoList",
 
-  created: function() {
-    this.fetchTodos()
-  },
-
   computed: {
     ...mapGetters(['todos', 'busyTodos'])
   },
 
   methods: {
-    ...mapActions(['fetchTodos', 'updateTodoFilters', 'updateTodo', 'deleteTodo']),
+    ...mapActions(['updateTodoFilters', 'updateTodo', 'deleteTodo']),
 
     /**
      * Prepares the update data and calls the state function to update the todo.

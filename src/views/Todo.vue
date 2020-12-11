@@ -29,10 +29,27 @@
 <script>
 import TodoSidebar from "../components/Todo/TodoSidebar";
 import TodoList from "../components/Todo/TodoList";
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: "Todo",
 
   components: { TodoSidebar, TodoList },
+
+  created() {
+    if (this.activeSubscription == null) {
+      this.$router.push('/packages')
+    } else {
+      this.fetchTodos()
+    }
+  },
+
+  computed: {
+    ...mapGetters(['activeSubscription'])
+  },
+
+  methods: {
+    ...mapActions(['fetchTodos'])
+  }
 };
 </script>

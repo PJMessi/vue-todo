@@ -28,7 +28,16 @@ const getters = {
   authToken: state => state.token,
 
   // returns the error message if the authentication failed.
-  authErrorMessage: state => state.errorMessage
+  authErrorMessage: state => state.errorMessage,
+
+  // returns the id of the active subscription of the user.
+  activeSubscription: state => {
+    let subscription = state.user.subscriptions
+    if (subscription[0]) {
+      return subscription[0]._id
+    }
+    return null
+  }
 };
 
 const actions = {

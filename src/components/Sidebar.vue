@@ -19,8 +19,8 @@
         </li>
 
         <li :class="{'active-page': getRouteName() == 'Todo'}">
-          <router-link to="/todos" active-class="active"
-            ><i class="material-icons-outlined">toc</i>Todos</router-link
+          <router-link disabled to="/todos" active-class="active"
+            ><i class="material-icons-outlined">toc</i>Todos <span v-if="activeSubscription == null" class="badge badge-secondary">Subscription required</span> </router-link
           >
         </li>
 
@@ -41,9 +41,13 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 export default {
   name: 'Sidebar',
+
+  computed: {
+    ...mapGetters(['activeSubscription'])
+  },
 
   methods: {
     ...mapActions(['logout']),
