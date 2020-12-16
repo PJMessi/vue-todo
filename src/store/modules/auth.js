@@ -47,7 +47,7 @@ const actions = {
    */
   fetchProfile: async function ({commit}) {
     try {
-      const resp = await axios.get('http://localhost:5000/customer/auth/profile' )
+      const resp = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/customer/auth/profile` )
       
       const user = resp.data.data
 
@@ -71,7 +71,7 @@ const actions = {
 
       commit('auth_request')
 
-      const resp = await axios.post('http://localhost:5000/customer/auth/login', credential )
+      const resp = await axios.post(`${process.env.VUE_APP_API_BASE_URL}/customer/auth/login`, credential )
           
       const token = resp.data.data.token
       localStorage.setItem('token', token)
@@ -106,7 +106,7 @@ const actions = {
 
       commit('auth_request')
 
-      const resp = await axios.post('http://localhost:5000/customer/auth/register', data )
+      const resp = await axios.post(`${process.env.VUE_APP_API_BASE_URL}/customer/auth/register`, data )
           
       const token = resp.data.data.token
       localStorage.setItem('token', token)

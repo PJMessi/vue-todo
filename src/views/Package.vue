@@ -142,9 +142,9 @@ export default {
         txAmt: taxAmount,
         tAmt: totalAmount,
         pid: paymentPackage._id,
-        scd: "EPAYTEST",
-        su: "http://localhost:8080/#/webhooks/esewa/success",
-        fu: "http://localhost:8080/#/webhooks/esewa/failed",
+        scd: process.env.VUE_APP_ESEWA_MERCHANT_ID,
+        su: `${process.env.VUE_APP_URL}/#/webhooks/esewa/success`,
+        fu: `${process.env.VUE_APP_URL}/#/webhooks/esewa/failed`,
       };
 
       var form = document.createElement("form");
@@ -167,10 +167,10 @@ export default {
       let vm = this
 
       let khaltiConfig = {
-        publicKey: "test_public_key_f7bab8da45fc4156b98c860083a304ef",
+        publicKey: process.env.VUE_APP_KHALTI_MERCHANT_ID,
         productIdentity: paymentPackage._id,
         productName: paymentPackage.name,
-        productUrl: "http://localhost:8080/#/packages",
+        productUrl: `${process.env.VUE_APP_URL}/#/packages`,
         amount: paymentPackage.price*100,
         eventHandler: {
           onSuccess(payload) {
@@ -192,7 +192,7 @@ export default {
     },
 
     handleKhaltiSubscription(payload) {
-      axios.post('http://localhost:5000/customer/payments/khalti', payload)
+      axios.post(`${process.env.VUE_APP_API_BASE_URL}/customer/payments/khalti`, payload)
         .then(res => {
           console.log(res)
           this.fetchProfile().then(() => {

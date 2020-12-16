@@ -43,7 +43,7 @@ const actions = {
    */
   fetchTodos: async function({commit}, url=null) {
     try {
-      url = url ? url : `http://localhost:5000/customer/todos`
+      url = url ? url : `${process.env.VUE_APP_API_BASE_URL}/customer/todos`
   
       const res = await axios.get(url, { params: state.filters })
   
@@ -68,7 +68,7 @@ const actions = {
     commit('updateCreatingStatusFlag', true)
 
     try {    
-      const res = await axios.post('http://localhost:5000/customer/todos', todoData )
+      const res = await axios.post(`${process.env.VUE_APP_API_BASE_URL}/customer/todos`, todoData )
 
       const newTodo = res.data.data
 
@@ -95,7 +95,7 @@ const actions = {
       const todoId = todoData._id
       delete todoData['_id'] 
 
-      const res = await axios.put(`http://localhost:5000/customer/todos/${todoId}`, todoData )
+      const res = await axios.put(`${process.env.VUE_APP_API_BASE_URL}/customer/todos/${todoId}`, todoData )
 
       const updatedTodo = res.data.data
 
@@ -118,7 +118,7 @@ const actions = {
     commit('addTodoToBusyList', todo)
 
     try {
-      await axios.delete(`http://localhost:5000/customer/todos/${todo._id}` )
+      await axios.delete(`${process.env.VUE_APP_API_BASE_URL}/customer/todos/${todo._id}` )
 
       commit('deleteTodo', todo)
 

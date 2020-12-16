@@ -89,7 +89,7 @@ export default {
         },
         function (error) {
           if (401 === error.response.status) {
-            store.dispatch("reset");          
+            store.dispatch("logout");          
             // router.push("/login");            
             return Promise.reject(error);
             
@@ -102,9 +102,9 @@ export default {
 
     subscribe: function () {
 
-      const pusher = new Pusher("c004ff36b2f98f38257f", {
+      const pusher = new Pusher(process.env.VUE_APP_PUSHER_KEY, {
         cluster: "ap2",
-        authEndpoint: "http://localhost:5000/customer/broadcasting/auth",
+        authEndpoint: `${process.env.VUE_APP_API_BASE_URL}/customer/broadcasting/auth`,
         auth: {
           headers: {
             Authorization: "Bearer " + this.authToken,

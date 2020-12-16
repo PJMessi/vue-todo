@@ -11,7 +11,7 @@ const getters = {
 const actions = {
   fetchPackages: async function({commit}, url=null) {
     try {
-      url = url ? url : `http://localhost:5000/customer/paymentPackages`
+      url = url ? url : `${process.env.VUE_APP_API_BASE_URL}/customer/paymentPackages`
   
       const res = await axios.get(url, { params: state.filters })
   

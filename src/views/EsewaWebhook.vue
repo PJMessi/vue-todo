@@ -61,7 +61,7 @@ export default {
         this.message = "Payment is being confirmed....";
         this.messageClass = "info";
 
-        await axios.post("http://localhost:5000/customer/payments/esewa", this.$route.query);
+        await axios.post(`${process.env.VUE_APP_API_BASE_URL}/customer/payments/esewa`, this.$route.query);
 
         await this.fetchProfile();
 
