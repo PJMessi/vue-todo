@@ -15,11 +15,14 @@
             <div class="card">
               <div class="card-body">
                 <h5 class="card-title">
-                  Packages<a
+                  Packages
+                  <a
                     href="#"
+                    @click.prevent="fetchPackages()"
                     class="card-title-helper blockui-transactions"
-                    ><i class="material-icons">refresh</i></a
-                  >
+                    >
+                    <i class="fas fa-redo-alt" :class="{'fa-spin': packagesListBeingUpdated}"></i>
+                  </a>
                 </h5>
                 <div class="table-responsive">
                   <table class="table table-striped">
@@ -33,8 +36,10 @@
                       </tr>
                     </thead>
                     <tbody>
+
                       <tr v-if="packages.length==0">
-                        <td colspan="5">No packages found...</td>
+                        <td colspan="5" v-if="packagesListBeingUpdated"><i class="fas fa-spinner fa-spin ml-2"></i> Loading...</td>
+                        <td colspan="5" v-else>No packages found...</td>
                       </tr>
 
                       <tr
@@ -103,7 +108,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["authUser", "packages"]),
+    ...mapGetters(["authUser", "packages", "packagesListBeingUpdated"]),
 
     activePackageId: function () {
       const subscriptions = this.authUser.subscriptions

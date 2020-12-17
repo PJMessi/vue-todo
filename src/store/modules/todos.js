@@ -37,7 +37,7 @@ const getters = {
 
 const actions = {
   /**
-   * Calls API to fetch the todos and replaces the current ones.
+   * Calls API to fetch the todos and replaces the current ones (if any).
    * @param {*} param0 
    * @param {*} url 
    */
@@ -193,7 +193,7 @@ const actions = {
 };
 
 const mutations = {
-  /** Sets new todos list by replacing the current ones. */
+  /** Replaces the current todos (if any) with new ones. */
   setTodos(state, data) {
     state.todos = data
   },
