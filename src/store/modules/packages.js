@@ -23,7 +23,7 @@ const actions = {
    * @param {*} url 
    */
   fetchPackages: async function({commit}, url=null) {
-    commit('updateLoadingStatus', true)
+    commit('updatePackagesListStatus', true)
     
     try {
       url = url ? url : `${process.env.VUE_APP_API_BASE_URL}/customer/paymentPackages`
@@ -40,7 +40,7 @@ const actions = {
       console.log(err)
 
     } finally {
-      commit('updateLoadingStatus', false)
+      commit('updatePackagesListStatus', false)
     }
   }
 };
@@ -52,7 +52,7 @@ const mutations = {
   },
 
   /** Updates the flag status that denotes if the package list is being updated. */
-  updateLoadingStatus(state, newStatus) {
+  updatePackagesListStatus(state, newStatus) {
     state.loading = newStatus
   }
 };

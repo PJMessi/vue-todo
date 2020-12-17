@@ -66,7 +66,7 @@
                 class="btn btn-primary"
                 @click.prevent="createTodo(todo)"
               >
-                Add
+                Add <i v-if="todoBeingCreated" class="fas fa-spinner fa-spin ml-2"></i>
               </button>
             </div>
           </div>
@@ -77,9 +77,9 @@
     <div class="todo-menu">
       <ul class="list-unstyled">
         <li :class="{ active: todosFilter.status == '' }">
-          <a href="#" @click.prevent="updateTodoFilters({ status: '' })"
-            ><i class="material-icons md-18">menu</i>All</a
-          >
+          <a href="#" @click.prevent="updateTodoFilters({ status: '' })">
+            <i class="material-icons md-18">menu</i>All
+          </a>
         </li>
         <li :class="{ active: todosFilter.status == 'pending' }">
           <a href="#" @click.prevent="updateTodoFilters({ status: 'pending' })">
@@ -87,10 +87,7 @@
           </a>
         </li>
         <li :class="{ active: todosFilter.status == 'completed' }">
-          <a
-            href="#"
-            @click.prevent="updateTodoFilters({ status: 'completed' })"
-          >
+          <a href="#" @click.prevent="updateTodoFilters({ status: 'completed' })" >
             <i class="material-icons md-18">done</i>Completed
           </a>
         </li>
@@ -157,7 +154,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['todosFilter', 'todos', 'todoBeingCreated']),
+    ...mapGetters(['todosFilter', 'todos', 'todoBeingCreated', 'todosListBeingUpdated']),
   },
 
   methods: {

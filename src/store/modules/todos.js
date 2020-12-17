@@ -14,8 +14,11 @@ const state = {
     status: ''
   },
 
-  // tells if a todo is being created.
+  // flag that tells if new todo is being created.
   creating: false,
+
+  // flag that tells if the todos list is being updated.
+  todosListLoading: false,
 
   // stores the list of ids of the todos that is currently being updated.
   busyTodos: []
@@ -28,8 +31,11 @@ const getters = {
   // returns the todo filter.
   todosFilter: state => state.filters,
 
-  // returns the flag that denotes if a new todo is being created.
+  // returns true if todo is being created, else false.
   todoBeingCreated: state => state.creating,
+
+  // returns true if the todos list is being updated, else false.
+  todosListBeingUpdated: state => state.todosListLoading,
 
   // returns the array of todos that are busy.
   busyTodos: state => state.busyTodos
@@ -42,6 +48,8 @@ const actions = {
    * @param {*} url 
    */
   fetchTodos: async function({commit}, url=null) {
+    commit('updateTodosListStatus', true)
+
     try {
       url = url ? url : `${process.env.VUE_APP_API_BASE_URL}/customer/todos`
   
@@ -56,6 +64,8 @@ const actions = {
     } catch (err) {
       console.log(err)
 
+    } finally {
+      commit('updateTodosListStatus', false)
     }
   },
 
@@ -65,7 +75,7 @@ const actions = {
    * @param {*} todoData 
    */
   createTodo: async function({commit}, todoData) {
-    commit('updateCreatingStatusFlag', true)
+    commit('updateTodoCreatingStatus', true)
 
     try {    
       const res = await axios.post(`${process.env.VUE_APP_API_BASE_URL}/customer/todos`, todoData )
@@ -78,7 +88,7 @@ const actions = {
       console.log(err)
 
     } finally {
-      commit('updateCreatingStatusFlag', false)
+      commit('updateTodoCreatingStatus', false)
     }
   },
 
@@ -240,8 +250,13 @@ const mutations = {
   },
 
   /** Updates the flag that denotes if a new todo is being created. */
-  updateCreatingStatusFlag(state, newStatus) {
+  updateTodoCreatingStatus(state, newStatus) {
     state.creating = newStatus
+  },
+
+  /** Updates the flag that denotes if the todos list is being updated. */
+  updateTodosListStatus(state, newStatus) {
+    state.todosListLoading = newStatus
   },
 
   /** Adds the todo to the busy list.  */

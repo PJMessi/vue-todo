@@ -12,22 +12,36 @@
       <ul class="accordion-menu">
         <li class="sidebar-title">Apps</li>
 
-        <li :class="{'active-page': getRouteName() == 'Dashboard'}">
+        <li :class="{ 'active-page': getRouteName() == 'Dashboard' }">
           <router-link to="/" exact-active-class="active"
-            ><i class="material-icons-outlined">dashboard</i>Dasboard</router-link
+            ><i class="material-icons-outlined">dashboard</i
+            >Dasboard</router-link
           >
         </li>
 
-        <li :class="{'active-page': getRouteName() == 'Todo'}">
+        <li :class="{ 'active-page': getRouteName() == 'Todo' }">
           <router-link disabled to="/todos" active-class="active"
-            ><i class="material-icons-outlined">toc</i>Todos <span v-if="activeSubscription == null" class="badge badge-secondary">Subscription required</span> </router-link
-          >
+            ><i class="material-icons-outlined">toc</i>Todos
+            <i
+              v-if="todosListBeingUpdated"
+              class="fas fa-spinner fa-spin ml-2"
+            ></i>
+            <span
+              v-if="activeSubscription == null"
+              class="badge badge-secondary"
+              >Subscription required</span
+            >
+          </router-link>
         </li>
 
-        <li :class="{'active-page': getRouteName() == 'Package'}">
+        <li :class="{ 'active-page': getRouteName() == 'Package' }">
           <router-link to="/packages" active-class="active"
-            ><i class="material-icons-outlined">card_membership</i>Packages</router-link
-          >
+            ><i class="material-icons-outlined">card_membership</i>Packages
+            <i
+              v-if="packagesListBeingUpdated"
+              class="fas fa-spinner fa-spin ml-2"
+            ></i>
+          </router-link>
         </li>
 
         <li>
@@ -41,27 +55,31 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters } from "vuex";
 export default {
-  name: 'Sidebar',
+  name: "Sidebar",
 
   computed: {
-    ...mapGetters(['activeSubscription'])
+    ...mapGetters([
+      "activeSubscription",
+      "todosListBeingUpdated",
+      "packagesListBeingUpdated",
+    ]),
   },
 
   methods: {
-    ...mapActions(['logout']),
+    ...mapActions(["logout"]),
 
     /**
      * Shows confirm dialog for logout, and calls logout function if user checks yes.
      */
-    confirmLogout: async function() {
+    confirmLogout: async function () {
       let result = await this.$Swal.fire({
-        title: 'Are you sure?',
+        title: "Are you sure?",
         showCancelButton: true,
-        cancelButtonColor: '#3085d6',
-        confirmButtonColor: '#d33',
-        confirmButtonText: 'Yes',
+        cancelButtonColor: "#3085d6",
+        confirmButtonColor: "#d33",
+        confirmButtonText: "Yes",
       });
 
       if (result.isConfirmed) {
@@ -69,9 +87,9 @@ export default {
       }
     },
 
-    getRouteName: function() {
-      return this.$route.name
-    }
+    getRouteName: function () {
+      return this.$route.name;
+    },
   },
 };
 </script>

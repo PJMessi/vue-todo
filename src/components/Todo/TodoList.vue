@@ -5,7 +5,8 @@
         <ul class="list-unstyled">
 
           <li v-if="todos.length == 0">
-            <a href="javascript:void(0)">No todos found...</a>
+            <a href="javascript:void(0)" v-if="todosListBeingUpdated == true"><i class="fas fa-spinner fa-spin ml-2"></i> Loading...</a>
+            <a href="javascript:void(0)" v-else>No todos found...</a>
           </li>
 
           <li v-else v-for="todo in todos" :key="todo._id">
@@ -20,7 +21,7 @@
                 <small>{{todo.description}}</small>
               </span>
               <span class="float-right">
-                <button class="btn btn-outline-light btn-xs" @click="confirmDeleteTodo(todo)">Delete</button>
+                <button :disabled="busyTodos.includes(todo._id)" class="btn btn-outline-light btn-xs" @click="confirmDeleteTodo(todo)">Delete</button>
               </span>
 
             </a>
@@ -39,7 +40,7 @@ export default {
   name: "TodoList",
 
   computed: {
-    ...mapGetters(['todos', 'busyTodos'])
+    ...mapGetters(['todos', 'busyTodos', 'todosListBeingUpdated'])
   },
 
   methods: {
