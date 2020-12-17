@@ -54,8 +54,11 @@
                       type="submit"
                       class="btn btn-primary btn-block btn-submit"
                     >
-                      Sign Up
+                      Sign Up <i v-if="authStatus == 'loading'" class="fas fa-spinner fa-spin ml-2"></i>
                     </button>
+                    <div class="auth-options">                      
+                      <router-link to="login" class="forgot-link">Have an account?</router-link>
+                    </div>
                   </form>
                 </div>
               </div>
@@ -78,7 +81,7 @@ export default {
   name: "Register",
 
   computed: {
-    ...mapGetters(["authUser", "authErrorMessage", "isLoggedIn"]),
+    ...mapGetters(["authStatus", "authUser", "authErrorMessage", "isLoggedIn"]),
   },
 
   watch: {

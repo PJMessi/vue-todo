@@ -35,20 +35,10 @@
                       type="submit"
                       class="btn btn-primary btn-block btn-submit"
                     >
-                      Sign In
+                      Sign In <i v-if="authStatus == 'loading'" class="fas fa-spinner fa-spin ml-2"></i>
                     </button>
-                    <div class="auth-options">
-                      <div class="custom-control custom-checkbox form-group">
-                        <input
-                          type="checkbox"
-                          class="custom-control-input"
-                          id="exampleCheck1"
-                        />
-                        <label class="custom-control-label" for="exampleCheck1"
-                          >Remember me</label
-                        >
-                      </div>
-                      <a href="#" class="forgot-link">Forgot Password?</a>
+                    <div class="auth-options">                      
+                      <router-link to="register" class="forgot-link">Sign Up</router-link>
                     </div>
                   </form>
                 </div>
@@ -72,7 +62,7 @@ export default {
   name: "Login",
 
   computed: {
-    ...mapGetters(["authUser", "authErrorMessage", "isLoggedIn"]),
+    ...mapGetters(["authStatus", "authUser", "authErrorMessage", "isLoggedIn"]),
   },
 
   watch: {
