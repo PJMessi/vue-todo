@@ -211,35 +211,32 @@ const mutations = {
   /** Adds todo to the current todos list. */
   addTodo(state, newTodo) {
     if (state.filters.status == 'pending' || state.filters.status == '') {
-      let todoData = state.todos.docs
-      todoData.unshift(newTodo)
-      Vue.set(state.todos, 'docs', todoData)
+      let updatedList = state.todos
+      updatedList.unshift(newTodo)
+      Vue.set(state, 'todos', updatedList)
     }
   },
 
   /** Updates the todo from the current todos list. */
   updateTodo(state, updatedTodo) {
-    let todoData = state.todos.docs
-    todoData = todoData.map(todo => {
+    let updatedList = state.todos
+    updatedList = updatedList.map(todo => {
       if (todo._id == updatedTodo._id) {
         return updatedTodo
       }
       return todo
     })
-    Vue.set(state.todos, 'docs', todoData)
+    Vue.set(state, 'todos', updatedList)
   },
 
   /** Deletes the todo from the current todos list. */
   deleteTodo(state, todoToBeDeleted) {
-    let todoData = state.todos.docs
-
-    const index = todoData.findIndex(todo => {
+    let updatedList = state.todos
+    const index = updatedList.findIndex(todo => {
       return todo._id == todoToBeDeleted._id
     })
-
-    todoData.splice(index, 1)
-
-    Vue.set(state.todos, 'docs', todoData)
+    updatedList.splice(index, 1)
+    Vue.set(state, 'todos', updatedList)
   },
 
   /** Updates the filter that will be used to fetch the todos. */
