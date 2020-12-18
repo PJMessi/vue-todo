@@ -3,11 +3,11 @@ import Vue from 'vue';
 
 const state = {
   // list of todos along with pagination information.
-  todos: {docs:[]},
+  todos: [],
 
   // filters that was used to fetch the current todos list.
   filters: {
-    limit: 15,
+    //limit: 15,
     sortBy: '_id',
     sortOrder: 'desc',
     q: '',
@@ -26,7 +26,7 @@ const state = {
 
 const getters = {
   // returns the current list of todos.
-  todos: state => state.todos.docs,
+  todos: state => state.todos,
 
   // returns the todo filters that was used to fetch the current todos list.
   todosFilter: state => state.filters,
