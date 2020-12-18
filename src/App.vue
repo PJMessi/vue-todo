@@ -17,6 +17,7 @@
           <div class="page-container">
             <TopNavivation />
 
+            <vue-progress-bar></vue-progress-bar>
             <router-view/>
             
             <div class="page-footer">
@@ -51,18 +52,31 @@ export default {
 
   components: { Login, Register, Sidebar, TopNavivation },
 
-  created: function() {
+  created: function() {   
     this.interceptAxios401()
     
     if (this.$route.name != 'Login' && this.$route.name != 'Register') {
+      // fetching user profile.
       this.fetchProfile()
+
+      // subscribing to pusher channels.
       this.subscribe()
     }
 
   },
 
   computed: {
-    ...mapGetters(["authUser", "isLoggedIn", "authToken"])
+    ...mapGetters([
+      "authUser",
+      "isLoggedIn",
+      "authToken",
+      'todosListBeingUpdated', 
+      "packagesListBeingUpdated", 
+      "paymentStatus",
+      "todos",
+      "packages",
+      "todosFilter"
+    ])
   },
 
   watch: {
@@ -71,13 +85,78 @@ export default {
       if (newValue != true) {
         this.$router.push('/login')
       }
+    },
+
+    todosListBeingUpdated: function(value) {
+      switch(value) {
+        case true:
+          if (this.todos.length == 0) this.$Progress.start()
+          break;
+
+        case false:
+          this.$Progress.finish()
+          break;
+      }
+    },
+
+    paymentStatus: async function(newStatus) {
+      switch(newStatus) {
+        case 'confirming':
+          this.$Progress.start()
+          break;
+
+        case 'success':
+          this.$Progress.decrease(300)
+          await this.fetchProfile()
+          this.$Progress.finish()
+          this.$Toast.fire({
+            icon: 'success',
+            title: 'Subscription successful'
+          })
+          break;
+
+        case 'failed':
+          this.$Progress.fail()
+          this.$Toast.fire({
+            icon: 'error',
+            title: 'Subscription failed'
+          })
+          break;
+      }
+    },
+
+    packagesListBeingUpdated: function(value) {
+      switch(value) {
+        case true:
+          if (this.packages.length == 0) this.$Progress.start()
+          break;
+
+        case false:
+          this.$Progress.finish()
+          break;
+      }
+    },
+
+    todosFilter: {
+      handler: function() {
+        this.$Progress.start()
+      },
+      deep: true
     }
 
   },
 
   methods: {
-    ...mapActions(['addReceivedTodo', 'updateReceivedTodo', 'deleteReceivedTodo', 'fetchProfile']),
+    ...mapActions([
+      'addReceivedTodo', 
+      'updateReceivedTodo', 
+      'deleteReceivedTodo', 
+      'fetchProfile'
+    ]),
 
+    /**
+     * intercepting 401 request and redirecting to the login page.
+     */
     interceptAxios401: function () {
       let store = this.$store;
       // let router = this.$router;
@@ -100,6 +179,9 @@ export default {
       );
     },
 
+    /**
+     * Subscribes to channels and handles the events.
+     */
     subscribe: function () {
 
       const pusher = new Pusher(process.env.VUE_APP_PUSHER_KEY, {

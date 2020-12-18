@@ -5,6 +5,7 @@ import store from './store'
 import Axios from 'axios'
 import Swal from 'sweetalert2'
 import './filters/index'
+import VueProgressBar from 'vue-progressbar'
 
 Vue.config.productionTip = false
 
@@ -28,6 +29,13 @@ const Toast = Swal.mixin({
   }
 })
 Vue.prototype.$Toast = Toast
+
+// setting up vue progress bar.
+Vue.use(VueProgressBar, {
+  color: 'rgb(143, 255, 199)',
+  failedColor: 'red',
+  height: '2px'
+})
 
 new Vue({
   router,

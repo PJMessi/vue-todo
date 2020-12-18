@@ -16,13 +16,6 @@
               <div class="card-body">
                 <h5 class="card-title">
                   Packages
-                  <a
-                    href="#"
-                    @click.prevent="fetchPackages()"
-                    class="card-title-helper blockui-transactions"
-                    >
-                    <i class="fas fa-redo-alt" :class="{'fa-spin': packagesListBeingUpdated}"></i>
-                  </a>
                 </h5>
                 <div class="table-responsive">
                   <table class="table table-striped">
@@ -92,7 +85,6 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import KhaltiCheckout from "khalti-web";
-import axios from 'axios'
 
 export default {
   name: "Package",
@@ -104,12 +96,14 @@ export default {
   },
 
   created() {
+    /** Fetching the packages. */
     this.fetchPackages();
   },
 
   computed: {
-    ...mapGetters(["authUser", "packages", "packagesListBeingUpdated"]),
+    ...mapGetters(["authUser", "packages"]),
 
+    /** Returns the id of the package the customer is subscribed to. */
     activePackageId: function () {
       const subscriptions = this.authUser.subscriptions
       if (!subscriptions) return null;
@@ -122,7 +116,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(["fetchPackages", "fetchProfile"]),
+    ...mapActions(["fetchPackages", "fetchProfile", "confirmKhaltiPayment", "packagesListBeingUpdated"]),
 
     subscribe(paymentPackage, gateway) {
       if (gateway == "esewa") {
@@ -179,11 +173,15 @@ export default {
         amount: paymentPackage.price*100,
         eventHandler: {
           onSuccess(payload) {
-            vm.handleKhaltiSubscription(payload)            
+            vm.confirmKhaltiPayment(payload)            
 
           },
           onError(error) {
             console.log(error);
+            vm.$Toast.fire({
+              icon: 'error',
+              title: 'Subscription failed'
+            })
           },
           onClose() {
             console.log("widget is closing");
@@ -194,27 +192,6 @@ export default {
     
       let checkout = new KhaltiCheckout(khaltiConfig);
       checkout.show({ amount: khaltiConfig.amount });
-    },
-
-    handleKhaltiSubscription(payload) {
-      axios.post(`${process.env.VUE_APP_API_BASE_URL}/customer/payments/khalti`, payload)
-        .then(res => {
-          console.log(res)
-          this.fetchProfile().then(() => {
-            this.$Toast.fire({
-              icon: 'success',
-              title: 'Subscription successful'
-            })
-          })
-
-        })
-        .catch(err => {
-          console.log(err)
-          this.$Toast.fire({
-              icon: 'error',
-              title: 'Subscription failed'
-            })
-        })
     },
   },
 };

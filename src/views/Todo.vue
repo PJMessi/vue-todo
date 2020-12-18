@@ -37,6 +37,7 @@ export default {
   components: { TodoSidebar, TodoList },
 
   created() {
+    /** If customer does not have active subscription, redirect to packages. */
     if (this.activeSubscription == null) {
       this.$router.push('/packages')
     } else {
@@ -45,7 +46,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['activeSubscription'])
+    ...mapGetters(['todos', 'activeSubscription', 'todosListBeingUpdated', 'todos'])
   },
 
   methods: {

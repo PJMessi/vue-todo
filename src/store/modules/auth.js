@@ -1,21 +1,21 @@
 import axios from 'axios';
 
 const state = {
-  // stores the authentication status about wether its in progress, whether it succeeded or failed.
+  // authentication status about wether its in progress, whether it succeeded or failed.
   status: '',
 
-  // stores the auth token.
+  // auth token.
   token: localStorage.getItem('token') || '',
 
-  // stores the auth user.
+  // auth user.
   user : JSON.parse(localStorage.getItem('user')) || {},
 
-  // stores the error message if the authentication failed.
+  // the error message for failed authentication.
   errorMessage: ''
 };
 
 const getters = {
-  // returns if the user is logged in or not.
+  // returns true if the user is logged in, else false.
   isLoggedIn: state => !!state.token,
 
   // returns the authentication status about wether its in progress, whether it succeeded or failed.

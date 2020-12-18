@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const state = {
-  // stores the list of the packages.
+  // list of the packages.
   packages: [],
 
   // flag that tells if the packages list is being updated.
@@ -18,7 +18,7 @@ const getters = {
 
 const actions = {
   /**
-   * Calls the api to fetch the list of packages and replaces the current ones (if any).
+   * Calls the api to fetch the list of packages and replaces the current packages list.
    * @param {*} param0 
    * @param {*} url 
    */
@@ -46,7 +46,7 @@ const actions = {
 };
 
 const mutations = {
-  /** Replaces the current packages (if any) with new ones. */
+  /** Replaces the current packages list with new list. */
   setPackages(state, data) {
     state.packages = data
   },

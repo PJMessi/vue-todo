@@ -22,10 +22,6 @@
         <li :class="{ 'active-page': getRouteName() == 'Todo' }">
           <router-link disabled to="/todos" active-class="active"
             ><i class="material-icons-outlined">toc</i>Todos
-            <i
-              v-if="todosListBeingUpdated"
-              class="fas fa-spinner fa-spin ml-2"
-            ></i>
             <span
               v-if="activeSubscription == null"
               class="badge badge-secondary"
@@ -37,10 +33,6 @@
         <li :class="{ 'active-page': getRouteName() == 'Package' }">
           <router-link to="/packages" active-class="active"
             ><i class="material-icons-outlined">card_membership</i>Packages
-            <i
-              v-if="packagesListBeingUpdated"
-              class="fas fa-spinner fa-spin ml-2"
-            ></i>
           </router-link>
         </li>
 
@@ -64,6 +56,7 @@ export default {
       "activeSubscription",
       "todosListBeingUpdated",
       "packagesListBeingUpdated",
+      "paymentStatus"
     ]),
   },
 

@@ -2,10 +2,10 @@ import axios from 'axios';
 import Vue from 'vue';
 
 const state = {
-  // stores the list of todos along with pagination information.
+  // list of todos along with pagination information.
   todos: {docs:[]},
 
-  // stores the filters used to fetch the current todos list.
+  // filters that was used to fetch the current todos list.
   filters: {
     limit: 15,
     sortBy: '_id',
@@ -15,35 +15,35 @@ const state = {
   },
 
   // flag that tells if new todo is being created.
-  creating: false,
+  todoBeingCreated: false,
 
   // flag that tells if the todos list is being updated.
-  todosListLoading: false,
+  todosListBeingUpdated: false,
 
-  // stores the list of ids of the todos that is currently being updated.
+  // list of ids of the todos that are currently being updated.
   busyTodos: []
 };
 
 const getters = {
-  // returns the todos.
+  // returns the current list of todos.
   todos: state => state.todos.docs,
 
-  // returns the todo filter.
+  // returns the todo filters that was used to fetch the current todos list.
   todosFilter: state => state.filters,
 
   // returns true if todo is being created, else false.
-  todoBeingCreated: state => state.creating,
+  todoBeingCreated: state => state.todoBeingCreated,
 
   // returns true if the todos list is being updated, else false.
-  todosListBeingUpdated: state => state.todosListLoading,
+  todosListBeingUpdated: state => state.todosListBeingUpdated,
 
-  // returns the array of todos that are busy.
+  // returns the array of todos that are currently beging updated.
   busyTodos: state => state.busyTodos
 };
 
 const actions = {
   /**
-   * Calls API to fetch the todos and replaces the current ones (if any).
+   * Calls API to fetch the todos and replaces the current todos list (if any).
    * @param {*} param0 
    * @param {*} url 
    */
@@ -141,7 +141,7 @@ const actions = {
   },
 
   /**
-   * Updates the filters used to fetch the todos.
+   * Updates the filters which is to be used to fetch the todos.
    * @param {*} param0 
    * @param {*} filterData 
    */
@@ -203,12 +203,12 @@ const actions = {
 };
 
 const mutations = {
-  /** Replaces the current todos (if any) with new ones. */
+  /** Replaces the current todos list with new list. */
   setTodos(state, data) {
     state.todos = data
   },
 
-  /** Adds todo to the todos list. */
+  /** Adds todo to the current todos list. */
   addTodo(state, newTodo) {
     if (state.filters.status == 'pending' || state.filters.status == '') {
       let todoData = state.todos.docs
@@ -217,7 +217,7 @@ const mutations = {
     }
   },
 
-  /** Updates the todo from the list. */
+  /** Updates the todo from the current todos list. */
   updateTodo(state, updatedTodo) {
     let todoData = state.todos.docs
     todoData = todoData.map(todo => {
@@ -229,7 +229,7 @@ const mutations = {
     Vue.set(state.todos, 'docs', todoData)
   },
 
-  /** Deletes the todo from the list. */
+  /** Deletes the todo from the current todos list. */
   deleteTodo(state, todoToBeDeleted) {
     let todoData = state.todos.docs
 
@@ -242,7 +242,7 @@ const mutations = {
     Vue.set(state.todos, 'docs', todoData)
   },
 
-  /** Updates the filter for todos. */
+  /** Updates the filter that will be used to fetch the todos. */
   updateFilter(state, filterData) {
     for (const [key, value] of Object.entries(filterData)) {
       state.filters[key] = value
@@ -251,12 +251,12 @@ const mutations = {
 
   /** Updates the flag that denotes if a new todo is being created. */
   updateTodoCreatingStatus(state, newStatus) {
-    state.creating = newStatus
+    state.todoBeingCreated = newStatus
   },
 
   /** Updates the flag that denotes if the todos list is being updated. */
   updateTodosListStatus(state, newStatus) {
-    state.todosListLoading = newStatus
+    state.todosListBeingUpdated = newStatus
   },
 
   /** Adds the todo to the busy list.  */
